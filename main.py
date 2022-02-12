@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
+import time
 
 app = FastAPI()
 
@@ -45,13 +46,38 @@ def add_time(r: Room):
         elif r.Room == 2:
             col3.insert_one({"Time": res})
         else:
-            col4.insert_one({"Time": res})
+          col4.insert_one({"Time": res})
         new_value = {"$set": {"Time": None, "Status": r.Status}}
         col1.update_one(query, new_value)
         return {
             "result": "exit room {}".format(r.Room),
             "time use": res
         }
+          
+@app.get('/time/{r}')
+def op(r:int):
+    if r== 1:
+        query= {"Room": r}
+        result = col1.find({"Room":1},{"_id":0})
+        result1 = list(result)
+        result1[0]['Time'] = datetime.fromtimestamp(result1[0]['Time']).strftime("%H:%M")
+        print(result1[0]['Time'])
+        if len(result1)!=0:
+         return result1[0]
+    elif r== 2:
+        query= {"Room": r}
+        result = col1.find({"Room":2},{"_id":0})
+        result1 = list(result)
+        result1[0]['Time'] = datetime.fromtimestamp(result1[0]['Time']).strftime("%H:%M")
+        if len(result1)!=0:
+         return result1[0]
+    elif r== 3:
+        query= {"Room": r}
+        result = col1.find({"Room":3},{"_id":0})
+        result1 = list(result)
+        result1[0]['Time'] = datetime.fromtimestamp(result1[0]['Time']).strftime("%H:%M")
+        if len(result1)!=0:
+         return result1[0] 
 
 @app.get("/get/time_used/{room}")
 def show_time_used(room: int):
@@ -71,7 +97,6 @@ def calculate_estimatetime(db):
     result = sum(list_time) / len(list_time)
     result = datetime.fromtimestamp(result).strftime("%M:%S")
     return result
-
 
 @app.get("/show_estimate/{room}")
 def get_estimate_time(room: int):
