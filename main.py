@@ -12,10 +12,12 @@ client = MongoClient('mongodb://localhost', 27017)
 
 db = client['miniproject']
 
+
 class Room(BaseModel):
     Room: int
     Status: int
     Time: Optional[int] = None
+
 
 col1 = db['Room']
 col2 = db['estimate_1']
@@ -36,7 +38,7 @@ def add_time(r: Room):
 
     elif r.Status == 1:
         query = {"Room": r.Room}
-        time = col1.find_one(query, {"_id": 0,"Time": 1})
+        time = col1.find_one(query, {"_id": 0, "Time": 1})
         res = datetime.now().timestamp() - time["Time"]
         if r.Room == 1:
             col2.insert_one({"Time": res})
@@ -59,3 +61,24 @@ def show_time_used(room: int):
         "time used": res
     }
 
+def calculate_estimatetime(db):
+    all_time = db.find()
+    list_time = []
+    for i in all_time:
+        list_time.append(i['Time'])
+    result = sum(list_time) / len(list_time)
+    result = datetime.fromtimestamp(result).strftime("%M:%S")
+    return result
+
+
+@app.get("/show_estimate/{room}")
+def get_estimate_time(room: int):
+    if room == 1:
+        result = calculate_estimatetime(col2)
+        return {"Time": result}
+    elif room == 2:
+        result = calculate_estimatetime(col3)
+        return {"Time": result}
+    elif room == 3:
+        result = calculate_estimatetime(col4)
+        return {"Time": result}
