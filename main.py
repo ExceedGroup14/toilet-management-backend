@@ -50,5 +50,19 @@ def calculate_estimatetime(db):
     list_time = []
     for i in all_time:
         list_time.append(i['Time'])
-    result = sum(list_time)/len(list_time)
+    result = sum(list_time) / len(list_time)
+    result = datetime.fromtimestamp(result).strftime("%S")
     return result
+
+
+@app.get("/show_estimate/{room}")
+def get_estimate_time(room: int):
+    if room == 1:
+        result = calculate_estimatetime(col2)
+        return {"Time": result}
+    elif room == 2:
+        result = calculate_estimatetime(col3)
+        return {"Time": result}
+    elif room == 3:
+        result = calculate_estimatetime(col4)
+        return {"Time": result}
