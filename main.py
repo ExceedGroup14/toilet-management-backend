@@ -36,10 +36,10 @@ def add_time(r: Room):
         time = col1.find_one(query, {"_id": 0,"Time": 1})
         res = datetime.now().timestamp() - time["Time"]
         if r.Room == 1:
-            col2.insert_one(res)
+            col2.insert_one({"Time": res})
         elif r.Room == 2:
-            col3.insert_one(res)
+            col3.insert_one({"Time": res})
         else:
-            col4.insert_one(res)
+            col4.insert_one({"Time": res})
 
 
