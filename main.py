@@ -30,7 +30,7 @@ def add_time(r: Room):
     if r.Status == 0:
         r.Time = datetime.now().timestamp()
         query = {"Room": r.Room}
-        new_value = {"$set": {"Time": r.Time}}
+        new_value = {"$set": {"Time": r.Time, "Status": r.Status}}
         col1.update_one(query, new_value)
         return {
             "result": "enter room {}".format(r.Room) 
@@ -46,6 +46,8 @@ def add_time(r: Room):
             col3.insert_one({"Time": res})
         else:
             col4.insert_one({"Time": res})
+        new_value = {"$set": {"Time": None, "Status": r.Status}}
+        col1.update_one(query, new_value)
         return {
             "result": "exit room {}".format(r.Room),
             "time use": res
