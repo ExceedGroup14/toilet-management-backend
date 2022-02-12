@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
+import time
 
 app = FastAPI()
 
@@ -41,5 +42,27 @@ def add_time(r: Room):
             col3.insert_one(res)
         else:
             col4.insert_one(res)
-
-
+@app.get('/time/{r}')
+def op(r:int):
+    if r== 1:
+        query= {"Room": r}
+        result = col1.find({"Room":1},{"_id":0})
+        result1 = list(result)
+        result1[0]['Time'] = datetime.fromtimestamp(result1[0]['Time']).strftime("%H:%M")
+        print(result1[0]['Time'])
+        if len(result1)!=0:
+         return result1[0]
+    elif r== 2:
+        query= {"Room": r}
+        result = col1.find({"Room":2},{"_id":0})
+        result1 = list(result)
+        result1[0]['Time'] = datetime.fromtimestamp(result1[0]['Time']).strftime("%H:%M")
+        if len(result1)!=0:
+         return result1[0]
+    elif r== 3:
+        query= {"Room": r}
+        result = col1.find({"Room":3},{"_id":0})
+        result1 = list(result)
+        result1[0]['Time'] = datetime.fromtimestamp(result1[0]['Time']).strftime("%H:%M")
+        if len(result1)!=0:
+         return result1[0]
