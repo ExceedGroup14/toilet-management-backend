@@ -51,7 +51,7 @@ def calculate_estimatetime(db):
     for i in all_time:
         list_time.append(i['Time'])
     result = sum(list_time) / len(list_time)
-    result = datetime.fromtimestamp(result).strftime("%S")
+    result = datetime.fromtimestamp(result).strftime("%M:%S")
     return result
 
 
